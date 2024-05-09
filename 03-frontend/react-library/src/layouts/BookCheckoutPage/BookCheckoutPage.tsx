@@ -40,21 +40,21 @@ export const BookCheckoutPage = () => {
     async function checkoutBookByUser() {
         //Auth check not required checkoutBookByUser function called 
         //only when checkout button visible for authenticated users
-       // if (authState && authState.isAuthenticated) {
-            const url = `http://localhost:8080/api/books/secure/checkout?bookId=${bookId}`;
-            const requestOptions = {
-                method: 'PUT',
-                headers: {
-                    Authorization: `Bearer ${authState?.accessToken?.accessToken}`,
-                    'Content-Type': 'application/json'
-                }
+        // if (authState && authState.isAuthenticated) {
+        const url = `http://localhost:8080/api/books/secure/checkout?bookId=${bookId}`;
+        const requestOptions = {
+            method: 'PUT',
+            headers: {
+                Authorization: `Bearer ${authState?.accessToken?.accessToken}`,
+                'Content-Type': 'application/json'
             }
-            const responseData = await fetch(url, requestOptions);
-            if (!responseData.ok) {
-                throw new Error('Something went wrong while checking out book');
-            }
-            //  const responseJson = await responseData.json();
-            setIsBookCheckedOutByUser(true);
+        }
+        const responseData = await fetch(url, requestOptions);
+        if (!responseData.ok) {
+            throw new Error('Something went wrong while checking out book');
+        }
+        //  const responseJson = await responseData.json();
+        setIsBookCheckedOutByUser(true);
         //}
 
     }
@@ -62,32 +62,32 @@ export const BookCheckoutPage = () => {
     //useEffect for Is book checkedOut By User
 
     useEffect(() => {
-       if(authState && authState.isAuthenticated) {
-        const fetchIsBookCheckedOutByUser = async () => {
-            const url = `http://localhost:8080/api/books/secure/isBookCheckedOutByUser?bookId=${bookId}`
-            const requestOptions = {
-                method: 'GET',
-                headers: {
-                    Authorization: `Bearer ${authState.accessToken?.accessToken}`,
-                    'Content-type': 'application/json'
+        if (authState && authState.isAuthenticated) {
+            const fetchIsBookCheckedOutByUser = async () => {
+                const url = `http://localhost:8080/api/books/secure/isBookCheckedOutByUser?bookId=${bookId}`
+                const requestOptions = {
+                    method: 'GET',
+                    headers: {
+                        Authorization: `Bearer ${authState.accessToken?.accessToken}`,
+                        'Content-type': 'application/json'
 
+                    }
                 }
+
+                const responseData = await fetch(url, requestOptions);
+                if (!responseData.ok) {
+                    throw new Error('Something went wrong while get checked Out status');
+                }
+                const responseJson = await responseData.json();
+                setIsBookCheckedOutByUser(responseJson);
+
             }
 
-            const responseData = await fetch(url, requestOptions);
-            if (!responseData.ok) {
-                throw new Error('Something went wrong while get checked Out status');
-            }
-            const responseJson = await responseData.json();
-            setIsBookCheckedOutByUser(responseJson);
-
+            fetchIsBookCheckedOutByUser().catch((error: any) => {
+                setLoadingBookCheckedOutByUser(false);
+                setHttpError(error.message)
+            });
         }
-
-        fetchIsBookCheckedOutByUser().catch((error: any) => {
-            setLoadingBookCheckedOutByUser(false);
-            setHttpError(error.message)
-        });
-    }
         setLoadingBookCheckedOutByUser(false);
 
 
@@ -268,7 +268,7 @@ export const BookCheckoutPage = () => {
                 </div>
                 <CheckoutAndReviewBox book={book} mobile={true}
                     currentLoanCount={currentLoansCount} isAuthenticated={authState?.isAuthenticated}
-                    isCheckedOut={isBookCheckedOutByUser} checkoutBookByUser={checkoutBookByUser}/>
+                    isCheckedOut={isBookCheckedOutByUser} checkoutBookByUser={checkoutBookByUser} />
                 <hr />
                 <LatestReviews reviews={review} bookId={book?.id} mobile={true} />
             </div>
