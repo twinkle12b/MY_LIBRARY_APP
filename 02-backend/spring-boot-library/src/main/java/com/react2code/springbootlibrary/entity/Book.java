@@ -1,8 +1,7 @@
 package com.react2code.springbootlibrary.entity;
-
-
-import jakarta.persistence.*;
 import lombok.Data;
+
+import javax.persistence.*;
 
 @Entity
 @Data
