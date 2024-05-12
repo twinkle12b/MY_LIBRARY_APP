@@ -29,11 +29,6 @@ export const Pagination: React.FC<{
         } else {
             pageNumbers.push(props.currentPage - 1);
         }
-
-
-
-
-
     }
 
     return (

@@ -8,8 +8,10 @@ import { SearchBooksPage } from './layouts/SearchBooksPage/SearchBooksPage';
 import { BookCheckoutPage } from './layouts/BookCheckoutPage/BookCheckoutPage';
 import { oktaConfig } from './lib/OktaConfig';
 import { OktaAuth, toRelativeUrl } from '@okta/okta-auth-js';
-import { LoginCallback, Security } from '@okta/okta-react';
+import { LoginCallback, SecureRoute, Security } from '@okta/okta-react';
 import LoginWidget from './Auth/LoginWidget';
+import { ReviewListPage } from './layouts/BookCheckoutPage/ReviewListPage/ReviewListPage';
+import { ShelfPage } from './layouts/ShelfPage/ShelfPage';
 
 
 const oktaAuth = new OktaAuth(oktaConfig);
@@ -29,26 +31,30 @@ function App() {
   return (
     <div className='d-flex flex-column min-vh-100'>
       <Security oktaAuth={oktaAuth} restoreOriginalUri={restoreOriginalUri} onAuthRequired={customAuthHandler}>
-      <Navbar />
-      <div className='flex-grow-1'>
-        <Switch>
-          <Route path='/' exact>
-            <Redirect to='/homePage' />
-          </Route>
-          <Route path='/homePage'>
-            <HomePage />
-          </Route>
-          <Route path='/search'>
-            <SearchBooksPage />
-          </Route>
-          <Route path='/checkout/:bookId'>
-            <BookCheckoutPage />
-          </Route>
-          <Route path="/login" render={() => <LoginWidget config={oktaConfig} />} />
-        <Route path="/login/callback" component={LoginCallback} />
-        </Switch>
-      </div>
-      <Footer />
+        <Navbar />
+        <div className='flex-grow-1'>
+          <Switch>
+            <Route path='/' exact>
+              <Redirect to='/homePage' />
+            </Route>
+            <Route path='/homePage'>
+              <HomePage />
+            </Route>
+            <Route path='/search'>
+              <SearchBooksPage />
+            </Route>
+            <Route path='/allReviews/:bookId'>
+              <ReviewListPage />
+            </Route>
+            <Route path='/checkout/:bookId'>
+              <BookCheckoutPage />
+            </Route>
+            <Route path="/login" render={() => <LoginWidget config={oktaConfig} />} />
+            <Route path="/login/callback" component={LoginCallback} />
+            <SecureRoute path="/shelf"><ShelfPage /></SecureRoute>
+          </Switch>
+        </div>
+        <Footer />
       </Security>
     </div>
 

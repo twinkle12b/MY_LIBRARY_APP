@@ -17,10 +17,10 @@ public class MyDataRestConfig implements RepositoryRestConfigurer {
 
     @Override
     public void configureRepositoryRestConfiguration(RepositoryRestConfiguration configuration,
-                                               CorsRegistry cors) {
+                                                     CorsRegistry cors) {
 
         HttpMethod[] theUnsupportedActions = {HttpMethod.POST,
-                HttpMethod.PUT, HttpMethod.DELETE,HttpMethod.PATCH};
+                HttpMethod.PUT, HttpMethod.DELETE, HttpMethod.PATCH};
 
 
         configuration.exposeIdsFor(Book.class);
@@ -29,7 +29,7 @@ public class MyDataRestConfig implements RepositoryRestConfigurer {
         disableHttpMethods(Review.class, theUnsupportedActions, configuration);
 
         /* Configure CORS MAPPING */
-        cors.addMapping(configuration.getBasePath() +  "/**")
+        cors.addMapping(configuration.getBasePath() + "/**")
                 .allowedOrigins(theAllowedOrigins);
 
     }
