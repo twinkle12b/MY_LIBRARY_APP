@@ -32,6 +32,6 @@ public class Book {
     private String category;
 
     @Column(name = "img")
-    private String image;
+    private String img;
 
 }
