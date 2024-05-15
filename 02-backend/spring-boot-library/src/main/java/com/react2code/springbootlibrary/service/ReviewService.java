@@ -3,7 +3,7 @@ package com.react2code.springbootlibrary.service;
 
 import com.react2code.springbootlibrary.dao.ReviewRepository;
 import com.react2code.springbootlibrary.entity.Review;
-import com.react2code.springbootlibrary.entity.ReviewRequest;
+import com.react2code.springbootlibrary.requestModel.ReviewRequest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
