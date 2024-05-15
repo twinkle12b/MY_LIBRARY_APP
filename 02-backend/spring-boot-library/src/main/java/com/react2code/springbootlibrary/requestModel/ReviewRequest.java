@@ -1,4 +1,4 @@
-package com.react2code.springbootlibrary.entity;
+package com.react2code.springbootlibrary.requestModel;
 
 import lombok.Data;
 

@@ -1,6 +1,6 @@
 package com.react2code.springbootlibrary.controller;
 
-import com.react2code.springbootlibrary.entity.ReviewRequest;
+import com.react2code.springbootlibrary.requestModel.ReviewRequest;
 import com.react2code.springbootlibrary.service.ReviewService;
 import com.react2code.springbootlibrary.utils.ExtractJwt;
 import org.springframework.beans.factory.annotation.Autowired;
