@@ -32,6 +32,9 @@ export const BookCheckoutPage = () => {
     //Authentication
     const { authState } = useOktaAuth();
 
+    //Payment
+    const [displayWarning, setDisplayWarning] = useState(false);
+
     //Loans count state
     const [currentLoansCount, setCurrentLoanCount] = useState(0);
     const [isLoadingCurrentLoansCount, setLoadingCurrentLoansCount] = useState(true);
@@ -46,7 +49,7 @@ export const BookCheckoutPage = () => {
         //Auth check not required checkoutBookByUser function called 
         //only when checkout button visible for authenticated users
         // if (authState && authState.isAuthenticated) {
-        const url = `http://localhost:8080/api/books/secure/checkout?bookId=${bookId}`;
+        const url = `${process.env.REACT_APP_API}/books/secure/checkout?bookId=${bookId}`;
         const requestOptions = {
             method: 'PUT',
             headers: {
@@ -56,8 +59,10 @@ export const BookCheckoutPage = () => {
         }
         const responseData = await fetch(url, requestOptions);
         if (!responseData.ok) {
-            throw new Error('Something went wrong while checking out book');
+            setDisplayWarning(true);
+            return;
         }
+        setDisplayWarning(false);
         //  const responseJson = await responseData.json();
         setIsBookCheckedOutByUser(true);
         //}
@@ -75,7 +80,7 @@ export const BookCheckoutPage = () => {
 
         const reviewRequest: ReviewRequest = new ReviewRequest(starInput, bookId, reviewDescription);
 
-        const url = `http://localhost:8080/api/reviews/secure/postReviewByUser`;
+        const url = `${process.env.REACT_APP_API}/reviews/secure/postReviewByUser`;
         const requestOptions = {
             method: 'POST',
             headers: {
@@ -97,7 +102,7 @@ export const BookCheckoutPage = () => {
     useEffect(() => {
         const fetchIsBookCheckedOutByUser = async () => {
             if (authState && authState.isAuthenticated) {
-                const url = `http://localhost:8080/api/books/secure/isBookCheckedOutByUser?bookId=${bookId}`
+                const url = `${process.env.REACT_APP_API}/books/secure/isBookCheckedOutByUser?bookId=${bookId}`
                 const requestOptions = {
                     method: 'GET',
                     headers: {
@@ -127,7 +132,7 @@ export const BookCheckoutPage = () => {
     useEffect(() => {
         const fetchCurrentLoanCountByUser = async () => {
             if (authState && authState.isAuthenticated) {
-                const url = `http://localhost:8080/api/books/secure/currentLoanCount`;
+                const url = `${process.env.REACT_APP_API}/books/secure/currentLoanCount`;
                 const requestOptions = {
                     method: 'GET',
                     headers: {
@@ -160,7 +165,7 @@ export const BookCheckoutPage = () => {
     // useEffect to load book after user click view Details by bookId
     useEffect(() => {
         const fetchBook = async () => {
-            const baseUrl: string = `http://localhost:8080/api/books/${bookId}`
+            const baseUrl: string = `${process.env.REACT_APP_API}/books/${bookId}`
 
             const response = await fetch(baseUrl);
             if (!response.ok) {
@@ -198,7 +203,7 @@ export const BookCheckoutPage = () => {
     useEffect(() => {
         const fetchUserReviewPosted = async () => {
             if (authState && authState.isAuthenticated) {
-                const url = `http://localhost:8080/api/reviews/secure/isReviewListed?bookId=${bookId}`
+                const url = `${process.env.REACT_APP_API}/reviews/secure/isReviewListed?bookId=${bookId}`
                 const requestOptions = {
                     method: 'GET',
                     headers: {
@@ -232,7 +237,7 @@ export const BookCheckoutPage = () => {
 
     useEffect(() => {
         const fetchBookReviews = async () => {
-            const reviewUrl: string = `http://localhost:8080/api/reviews/search/findByBookId?bookId=${bookId}`
+            const reviewUrl: string = `${process.env.REACT_APP_API}/reviews/search/findByBookId?bookId=${bookId}`
             const responseReviews = await fetch(reviewUrl);
             if (!responseReviews.ok) {
                 throw new Error("Something Went Wrong");
@@ -290,6 +295,9 @@ export const BookCheckoutPage = () => {
     return (
         <div>
             <div className='container d-none d-lg-block'>
+                {displayWarning && <div className="alert alert-danger mt-3" role="alert">
+                    Please Pay outstanding Fees and return late book(s).
+                    </div>}
                 <div className='row mt-5'>
                     <div className='col-sm-2 col-md-2'>
                         {book?.img ?
@@ -317,6 +325,9 @@ export const BookCheckoutPage = () => {
             </div>
             {/* For Mobile Application */}
             <div className='container d-lg-none mt-5'>
+            {displayWarning && <div className="alert alert-danger mt-3" role="alert">
+                    Please Pay outstanding Fees and return late book(s).
+                    </div>}
                 <div className='d-flex justify-content-center align-items-center'>
                     {book?.img ?
                         <img src={book?.img} width='226' height='349' alt='Book' />
