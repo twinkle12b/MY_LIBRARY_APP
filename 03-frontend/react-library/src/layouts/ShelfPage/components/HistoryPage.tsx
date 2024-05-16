@@ -25,7 +25,7 @@ export const HistoryPage = () => {
     useEffect(() => {
         const fetchUserHistory = async () => {
             if (authState && authState.isAuthenticated) {
-                const historyUrl = `http://localhost:8080/api/histories/search/findBooksByUserEmail?userEmail=${authState.accessToken?.claims.sub}&page=${currentPage - 1}&size=${historiesPerPage}`;
+                const historyUrl = `${process.env.REACT_APP_API}/histories/search/findBooksByUserEmail?userEmail=${authState.accessToken?.claims.sub}&page=${currentPage - 1}&size=${historiesPerPage}`;
                 const requestOptions = {
                     method: 'GET',
                     headers: {

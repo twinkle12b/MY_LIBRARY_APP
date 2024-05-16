@@ -3,11 +3,14 @@ package com.react2code.springbootlibrary.service;
 import com.react2code.springbootlibrary.dao.BookRepository;
 import com.react2code.springbootlibrary.dao.CheckoutRepository;
 import com.react2code.springbootlibrary.dao.HistoryRepository;
+import com.react2code.springbootlibrary.dao.PaymentRepository;
 import com.react2code.springbootlibrary.entity.Book;
 import com.react2code.springbootlibrary.entity.Checkout;
 import com.react2code.springbootlibrary.entity.History;
+import com.react2code.springbootlibrary.entity.Payment;
 import com.react2code.springbootlibrary.responseModels.ShelfCurrentLoanResponse;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.parameters.P;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -27,16 +30,21 @@ public class BookService {
 
     private BookRepository bookRepository;
 
+    private PaymentRepository paymentRepository;
+
     private CheckoutRepository checkoutRepository;
 
     private HistoryRepository historyRepository;
 
 
     @Autowired
-    public BookService(BookRepository bookRepository, CheckoutRepository checkoutRepository, HistoryRepository historyRepository) {
+    public BookService(BookRepository bookRepository,
+                       CheckoutRepository checkoutRepository, HistoryRepository historyRepository,
+                       PaymentRepository paymentRepository) {
         this.bookRepository = bookRepository;
         this.checkoutRepository = checkoutRepository;
         this.historyRepository = historyRepository;
+        this.paymentRepository=paymentRepository;
     }
 
     //When user tries to check out a book
@@ -49,6 +57,34 @@ public class BookService {
 
         if (book.isEmpty() || validateCheckout != null || book.get().getCopiesAvailable() <= 0) {
             throw new Exception("Book doesn't exist or already checked out by user");
+        }
+
+        List<Checkout> booksCheckOutByUser = checkoutRepository.findByUserEmail(userEmail);
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+        boolean booksNeedToBeReturned = false;
+
+
+        for(Checkout checkout : booksCheckOutByUser) {
+         Date d1 = sdf.parse(checkout.getReturnDate());
+         Date d2 = sdf.parse(LocalDate.now().toString());
+         TimeUnit timeUnit = TimeUnit.DAYS;
+            long difference_in_time = timeUnit.convert(d1.getTime() - d2.getTime(),
+                    TimeUnit.MILLISECONDS);
+            if(difference_in_time < 0) {
+                booksNeedToBeReturned = true;
+                break;
+            }
+        }
+        Payment payment = paymentRepository.findByUserEmail(userEmail);
+        if((payment != null && payment.getAmount() > 0) || (payment!= null && booksNeedToBeReturned)) {
+            throw new Exception("OutStanding Fees");
+        }
+        if(payment== null) {
+            Payment payment1 = new Payment();
+            payment1.setAmount(00.00);
+            payment1.setUserEmail(userEmail);
+            paymentRepository.save(payment1);
+
         }
 
         book.get().setCopiesAvailable(book.get().getCopiesAvailable() - 1);
@@ -106,6 +142,20 @@ public class BookService {
         }
         book.get().setCopiesAvailable(book.get().getCopiesAvailable() + 1);
         bookRepository.save(book.get());
+
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+        Date d1 = sdf.parse(validateCheckout.getReturnDate());
+        Date d2 = sdf.parse(LocalDate.now().toString());
+
+        TimeUnit timeUnit = TimeUnit.DAYS;
+        long difference_in_time = timeUnit.convert(d1.getTime() - d2.getTime(),
+                TimeUnit.MILLISECONDS);
+        if(difference_in_time < 0) {
+            Payment payment = paymentRepository.findByUserEmail(userEmail);
+            payment.setAmount(payment.getAmount() + (difference_in_time * -1));
+            paymentRepository.save(payment);
+        }
+
         checkoutRepository.deleteById(validateCheckout.getId());
         History history = new History(userEmail,
                 validateCheckout.getCheckoutDate(),

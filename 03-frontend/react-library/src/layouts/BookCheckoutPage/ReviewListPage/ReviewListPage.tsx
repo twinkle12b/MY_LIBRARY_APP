@@ -23,7 +23,7 @@ export const ReviewListPage: React.FC<{}> = () => {
     // useEffect to load reviews by bookId
     useEffect(() => {
         const fetchBookReviews = async () => {
-            const reviewUrl = `http://localhost:8080/api/reviews/search/findByBookId?bookId=${bookId}&page=${currentPage - 1}&size=${reviewsPerPage}`;
+            const reviewUrl = `${process.env.REACT_APP_API}/reviews/search/findByBookId?bookId=${bookId}&page=${currentPage - 1}&size=${reviewsPerPage}`;
             const responseData = await fetch(reviewUrl);
             if (!responseData.ok) {
                 throw new Error("Something Went Wrong");
