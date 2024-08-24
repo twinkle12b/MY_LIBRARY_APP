@@ -9,6 +9,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.Base64;
 import java.util.Optional;
 
 @Service
@@ -73,8 +74,10 @@ public class AdminService {
         book.setCopies(addBookRequest.getCopies());
         book.setCopiesAvailable(addBookRequest.getCopies());
         book.setCategory(addBookRequest.getCategory());
-        book.setImg(addBookRequest.getImg());
+        book.setImg(Base64.getDecoder().decode(addBookRequest.getImg().substring(addBookRequest.getImg().indexOf(',')+1)));
         bookRepository.save(book);
 
     }
 }
+
+

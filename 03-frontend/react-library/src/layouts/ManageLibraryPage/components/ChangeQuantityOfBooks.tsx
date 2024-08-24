@@ -45,7 +45,7 @@ export const ChangeQuantityOfBooks = () => {
                     copies: responseData[key].copies,
                     copiesAvailable: responseData[key].copiesAvailable,
                     category: responseData[key].category,
-                    img: responseData[key].img,
+                    img: `data:image/png;base64, ${responseData[key].img}`,
                 });
             }
 
@@ -68,7 +68,7 @@ export const ChangeQuantityOfBooks = () => {
 
     if (isLoading) {
         return (
-            <SpinnerLoading/>
+            <SpinnerLoading />
         );
     }
 
@@ -88,16 +88,16 @@ export const ChangeQuantityOfBooks = () => {
                         <h3>Number of results: ({totalAmountOfBooks})</h3>
                     </div>
                     <p>
-                        {indexOfFirstBook + 1} to {lastItem} of {totalAmountOfBooks} items: 
+                        {indexOfFirstBook + 1} to {lastItem} of {totalAmountOfBooks} items:
                     </p>
                     {books.map(book => (
-                       <ChangeQuantityOfBook book={book} key={book.id} deleteBook={deleteBook} />
+                        <ChangeQuantityOfBook book={book} key={book.id} deleteBook={deleteBook} />
                     ))}
                 </>
                 :
                 <h5>Add a book before changing quantity</h5>
             }
-            {totalPages > 1 && <Pagination currentPage={currentPage} totalPages={totalPages} paginate={paginate}/>}
+            {totalPages > 1 && <Pagination currentPage={currentPage} totalPages={totalPages} paginate={paginate} />}
         </div>
     );
 }

@@ -1,5 +1,17 @@
 package com.react2code.springbootlibrary.service;
 
+import java.text.SimpleDateFormat;
+import java.time.LocalDate;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.List;
+import java.util.Optional;
+import java.util.concurrent.TimeUnit;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+
 import com.react2code.springbootlibrary.dao.BookRepository;
 import com.react2code.springbootlibrary.dao.CheckoutRepository;
 import com.react2code.springbootlibrary.dao.HistoryRepository;
@@ -9,20 +21,6 @@ import com.react2code.springbootlibrary.entity.Checkout;
 import com.react2code.springbootlibrary.entity.History;
 import com.react2code.springbootlibrary.entity.Payment;
 import com.react2code.springbootlibrary.responseModels.ShelfCurrentLoanResponse;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.core.parameters.P;
-import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
-
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
-import java.time.LocalDate;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
-import java.util.Optional;
-import java.util.concurrent.TimeUnit;
-import java.util.stream.Collectors;
 
 @Service
 @Transactional

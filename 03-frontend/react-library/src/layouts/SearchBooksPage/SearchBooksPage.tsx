@@ -52,7 +52,7 @@ export const SearchBooksPage = () => {
                         copies: responseData[key].copies,
                         copiesAvailable: responseData[key].copiesAvailable,
                         category: responseData[key].category,
-                        img: responseData[key].img,
+                        img: `data:image/png;base64, ${responseData[key].img}`
                     })
                 }
                 setBooks(loadedBooks);

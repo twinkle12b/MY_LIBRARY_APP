@@ -12,7 +12,7 @@ public class History {
     public History(){}
 
     public History(String userEmail, String checkoutDate, String returnedDate, String title,
-                   String author, String description, String img) {
+                   String author, String description, byte [] img) {
         this.userEmail = userEmail;
         this.checkoutDate = checkoutDate;
         this.returnedDate = returnedDate;
@@ -46,5 +46,5 @@ public class History {
     private String description;
 
     @Column(name="img")
-    private String img;
+    private byte[] img;
 }
