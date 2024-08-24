@@ -1,13 +1,21 @@
 package com.react2code.springbootlibrary.controller;
 
+import java.util.List;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.CrossOrigin;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestHeader;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RestController;
+
 import com.react2code.springbootlibrary.entity.Book;
 import com.react2code.springbootlibrary.responseModels.ShelfCurrentLoanResponse;
 import com.react2code.springbootlibrary.service.BookService;
 import com.react2code.springbootlibrary.utils.ExtractJwt;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.*;
 
-import java.util.List;
 
 @CrossOrigin("https://localhost:3000")
 @RestController
@@ -15,13 +23,12 @@ import java.util.List;
 public class BookController {
 
     private BookService bookService;
-
     public static final String email = "\"sub\"";
 
     @Autowired
     public BookController(BookService bookService) {
         this.bookService = bookService;
-
+    
     }
 
     @GetMapping("/secure/isBookCheckedOutByUser")
